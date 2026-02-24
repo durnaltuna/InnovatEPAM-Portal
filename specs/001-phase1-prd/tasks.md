@@ -43,7 +43,7 @@
 
 - [X] T013 [P] [US1] Add unit tests for auth state and role guards in tests/unit/auth-guards.test.ts
 - [X] T014 [P] [US1] Add integration tests for login success/failure in tests/integration/auth-login.test.ts
-- [ ] T015 [P] [US1] Add e2e test for login then logout protected route flow in tests/e2e/auth-login-logout.spec.ts
+- [X] T015 [P] [US1] Add e2e test for login then logout protected route flow in tests/e2e/auth-login-logout.spec.ts
 
 ### Implementation for User Story 1
 
@@ -65,15 +65,15 @@
 ### Tests for User Story 2
 
 - [X] T020 [P] [US2] Add unit tests for one-attachment and required-field validation in tests/unit/idea-validation.test.ts
-- [ ] T021 [P] [US2] Add integration tests for submit idea persistence and default status in tests/integration/idea-submit.test.ts
-- [ ] T022 [P] [US2] Add e2e test for submitter idea submission with one file in tests/e2e/idea-submit.spec.ts
+- [X] T021 [P] [US2] Add integration tests for submit idea persistence and default status in tests/integration/idea-submit.test.ts
+- [X] T022 [P] [US2] Add e2e test for submitter idea submission with one file in tests/e2e/idea-submit.spec.ts
 
 ### Implementation for User Story 2
 
-- [ ] T023 [US2] Implement idea and attachment persistence service in src/features/ideas/ideaService.ts
+- [X] T023 [US2] Implement idea and attachment persistence service in src/features/ideas/ideaService.ts
 - [X] T024 [US2] Implement submitter idea form with one-file constraint in src/features/ideas/IdeaForm.tsx
-- [ ] T025 [US2] Implement attachment upload helper bound to one-file rule in src/features/ideas/attachmentService.ts
-- [ ] T026 [US2] Implement submitter idea list page (own ideas only) in src/features/ideas/MyIdeasPage.tsx
+- [X] T025 [US2] Implement attachment upload helper bound to one-file rule in src/features/ideas/attachmentService.ts
+- [X] T026 [US2] Implement submitter idea list page (own ideas only) in src/features/ideas/MyIdeasPage.tsx
 
 **Checkpoint**: Idea submission with one attachment is fully functional and independently testable.
 

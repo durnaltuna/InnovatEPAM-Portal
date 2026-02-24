@@ -23,3 +23,40 @@ export interface IdeaFormInput {
   category: string;
   attachmentName?: string;
 }
+
+export type IdeaStatus = 'Submitted' | 'Under Review' | 'Accepted' | 'Rejected';
+
+export interface Idea {
+  id: string;
+  submitterId: string;
+  title: string;
+  description: string;
+  category: string;
+  status: IdeaStatus;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Attachment {
+  id: string;
+  ideaId: string;
+  fileName: string;
+  filePath: string;
+  uploadedAt: Date;
+}
+
+export type DecisionOutcome = 'Under Review' | 'Accepted' | 'Rejected';
+
+export interface Decision {
+  id: string;
+  ideaId: string;
+  adminId: string;
+  outcome: DecisionOutcome;
+  comment: string;
+  decidedAt: Date;
+}
+
+export interface DecisionHistoryEntry extends Decision {
+  fromStatus: IdeaStatus;
+  toStatus: IdeaStatus;
+}
