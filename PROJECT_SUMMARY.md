@@ -199,37 +199,6 @@ InnovatEPAM Portal is a web-based innovation idea management system that enables
 ### Core Achievement
 **Delivered a fully-functional complex workflow** (submission→evaluation→visibility loop) with **zero runtime errors**, **zero quality warnings**, and **62 passing tests** in an 8.5-hour sprint. This establishes a strong foundation for scaling ideas management and admin automation in future phases.
 
-## Demo Flow (3 Minutes)
-
-1. **Login as Submitter** (10s)
-   - Show login page
-   - Enter submitter credentials
-   - Show portal landing (My Ideas page)
-
-2. **Submit Idea with Attachment** (40s)
-   - Click "Submit New Idea"
-   - Fill form: title, description, category
-   - Upload one file (demo with PDF)
-   - Submit and show confirmation
-   - Verify idea appears in "My Ideas" with "Submitted" status
-
-3. **Switch to Admin & Review** (60s)
-   - Logout submitter
-   - Login as admin
-   - Show "Ideas for Review" dashboard with all submitted ideas
-   - Open decision modal for submitted idea
-   - Move to "Under Review" (no comment required)
-   - Transition to "Accepted" with comment
-   - Show decision history
-
-4. **Return as Submitter & Verify Visibility** (30s)
-   - Logout admin
-   - Login as original submitter
-   - Show "My Ideas" view
-   - Open idea detail showing status "Accepted"
-   - Show admin comment visibility
-   - Show decision timestamp
-
 ## Metrics & Quality Gates
 
 | Metric | Target | Achieved |
