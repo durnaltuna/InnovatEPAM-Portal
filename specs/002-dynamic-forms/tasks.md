@@ -7,6 +7,8 @@
 
 **Format**: `[ID] [PRIORITY] [USER_STORY] Description with file paths`
 
+**Task Count**: 125 total tasks (Phases 1-6d including cache latency, edge cases, message quality, rollback, and post-launch analytics)
+
 ---
 
 ## Format Key
@@ -91,6 +93,7 @@
   - Allow real-time updates if needed
 - [ ] T032 [P] Write integration tests for all Supabase queries in `tests/integration/supabase-queries.test.ts` verifying error handling (404, validation errors, etc.)
 - [ ] T033 Run Playwright test against live Supabase instance to verify query correctness end-to-end
+- [ ] T034 [P] Verify exact seed categories match assumptions: "Process Improvement", "Product Innovation", "Cost Reduction", "Business Process", "Other"
 
 ---
 
@@ -261,6 +264,7 @@
 - [ ] T081 [P] [US2] Add form-level error message display at top of form
 - [ ] T082 [US2] Write integration test at `tests/integration/form-submission-with-validation.test.ts` verifying validation → submission flow
 - [ ] T083 [US2] Run E2E test verifying validation errors block submission (extend T057)
+- [ ] T084-QUALITY [US2] Manually review all validation error messages for clarity, user-friendliness, and tone consistency (e.g., avoid generic "Invalid input"; prefer "Timeline must be between 1-36 months")
 
 **User Story 2 Success Criteria**:
 - ✅ Validation rules applied per category per field
@@ -269,6 +273,30 @@
 - ✅ All validation tests pass (90%+ coverage)
 - ✅ Error messages are clear and actionable
 - ✅ All 6 field types validated correctly
+
+---
+
+## Phase 4.5: Cross-Cutting - Cache Latency & Edge Case Testing
+
+**Goal**: Verify form config caching performance and handle schema evolution edge cases
+
+**Cache Performance**:
+- [ ] T085-PERF Benchmark form config fetch latency with SWR caching enabled
+  - Measure initial fetch (should be <200ms per plan.md)
+  - Verify cache hit response (<50ms)
+  - Test cache invalidation on manual refresh
+  - Test cache expiry at 5-minute mark
+  - Document SWR cache backend strategy in code comments
+- [ ] T086-PERF Ensure SC-004 "configuration changes effective within 1 minute" is testable post-Phase-2 when admin UI (Phase 3) can modify configs
+
+**Schema Evolution Edge Cases**:
+- [ ] T087-EDGE Test field type mismatch scenario: client fetches form config, then admin changes field type during form filling (Phase 3 concern)
+  - Simulate: fetch form config at T0, change field type at T0+30s, user submits at T0+60s
+  - Verify submission validation catches type mismatch
+  - Ensure user sees clear error ("Field config changed; please refresh")
+- [ ] T088-EDGE Test field removal scenario: client has rendered field X, admin removes field X from config (Phase 3 concern)
+  - Verify submission still validates against new schema (field X not required)
+  - Ensure user doesn't see orphaned field on refresh
 
 ---
 
@@ -288,7 +316,7 @@
 
 ### User Story 4: State Preservation Tests (Failing Test-First Gate)
 
-- [ ] T084 [US4] Write failing unit test at `tests/unit/form-state-category-switching.test.ts`
+- [ ] T089 [US4] Write failing unit test at `tests/unit/form-state-category-switching.test.ts`
   - Test: Fill field A (exists in categories 1 & 2) → switch category → field A value preserved
   - Test: Fill field B (only in category 1) → switch to category 2 → field B disappears, value cached
   - Test: Switch back to category 1 → field B value restored
@@ -297,25 +325,25 @@
 
 ### User Story 4: Smart Category Switching Implementation
 
-- [ ] T085 [US4] Update useFormState reducer to implement smart category switching
+- [ ] T090 [US4] Update useFormState reducer to implement smart category switching
   - On SET_CATEGORY action:
     - Identify visible fields in new category
     - Keep formData values for fields that remain visible (shared fields)
     - Store category-specific field values in separate cache for restoration if category selected again
     - Clear validation errors for fields that are no longer visible
-- [ ] T086 [US4] Implement field value caching mechanism in useFormState
+- [ ] T091 [US4] Implement field value caching mechanism in useFormState
   - Cache per category: {categoryId: {fieldId: value}}
   - On category change: save current category's field values, restore new category's cached values
   - Shared fields never cached, always in main formData
-- [ ] T087 [P] [US4] Add unit tests verifying state preservation matches acceptance scenario #2 in spec US-4
-- [ ] T088 [P] [US4] Write E2E test at `tests/e2e/form-state-preservation.spec.ts` with Playwright
+- [ ] T092 [P] [US4] Add unit tests verifying state preservation matches acceptance scenario #2 in spec US-4
+- [ ] T093 [P] [US4] Write E2E test at `tests/e2e/form-state-preservation.spec.ts` with Playwright
   - Fill form for category A
   - Switch to category B
   - Verify shared field values persist
   - Switch back to category A
   - Verify category A specific fields are restored (if implemented)
-- [ ] T089 [US4] Test backward compatibility: ensure Phase 1 submissions (no dynamic_form_data) don't cause errors
-- [ ] T090 [US4] Verify form state preservation tests pass
+- [ ] T094 [US4] Test backward compatibility: ensure Phase 1 submissions (no dynamic_form_data) don't cause errors
+- [ ] T095 [US4] Verify form state preservation tests pass
 
 **User Story 4 Success Criteria**:
 - ✅ Shared field values preserved on category switch
@@ -334,25 +362,34 @@
 
 **Goal**: Ensure Phase 1 ideas remain fully accessible and displayable
 
+### Migration Rollback Strategy
+
+- [ ] T096-ROLLBACK Document Supabase migration rollback procedure in `docs/deployment/migration-rollback.md`
+  - Outline steps to roll back schema changes if T006 backfill fails
+  - Document data restoration from backup
+  - Specify rollback SQL for each migration (reverse T002-T005)
+  - Test rollback on dev environment before Phase 1 completes
+  - Owner: Database Specialist; Timeline: Before T012 (run migrations)
+
 ### Backward Compat Tests (Failing Test-First Gate)
 
-- [ ] T091 Write failing integration test at `tests/integration/phase1-backward-compat.test.ts`
+- [ ] T097 Write failing integration test at `tests/integration/phase1-backward-compat.test.ts`
   - Test: Query Phase 1 idea by ID → returns all fields (no category_id needed)
   - Test: List ideas view displays both Phase 1 (no category) and Phase 2 (with category) ideas
   - Test: Idea detail view handles missing dynamic_form_data gracefully
-- [ ] T092 Write E2E test at `tests/e2e/phase1-ideas-display.spec.ts`
+- [ ] T098 Write E2E test at `tests/e2e/phase1-ideas-display.spec.ts`
   - Navigate to my ideas
   - Verify Phase 1 ideas display without errors
   - Click Phase 1 idea detail → display without category badge or dynamic fields
 
 ### Implementation
 
-- [ ] T093 Ensure Supabase backfill assigned all Phase 1 ideas to LEGACY_SUBMISSION category
-- [ ] T094 Update idea detail / list views to handle missing dynamic_form_data (default to {})
-- [ ] T095 [P] Add "VIEW" badge or prefix for Phase 1 ideas: "Legacy (Submitted before dynamic forms)"
-- [ ] T096 [P] In admin idea list, include column to distinguish Phase 1 vs Phase 2 ideas
-- [ ] T097 [P] Write test verifying Phase 1 ideas with null category_id are handled (defensive nullability check)
-- [ ] T098 Ensure all tests pass (backward compatibility integration + e2e)
+- [ ] T099 Ensure Supabase backfill assigned all Phase 1 ideas to LEGACY_SUBMISSION category
+- [ ] T100 Update idea detail / list views to handle missing dynamic_form_data (default to {})
+- [ ] T101 [P] Add "VIEW" badge or prefix for Phase 1 ideas: "Legacy (Submitted before dynamic forms)"
+- [ ] T102 [P] In admin idea list, include column to distinguish Phase 1 vs Phase 2 ideas
+- [ ] T103 [P] Write test verifying Phase 1 ideas with null category_id are handled (defensive nullability check)
+- [ ] T104 Ensure all tests pass (backward compatibility integration + e2e)
 
 ### Phase 6b: Accessibility & UI Polish
 
@@ -360,15 +397,15 @@
 
 **Goal**: Ensure dynamic forms are accessible (WCAG 2.1 AA)
 
-- [ ] T099 [P] Add <label> elements with htmlFor attributes to all FormFieldInput components
-- [ ] T100 [P] Add aria-describedby pointing to help_text for each field
-- [ ] T101 [P] Add aria-invalid="true" to inputs with errors
-- [ ] T102 [P] Add aria-live="polite" to error message container for screen reader announcements
-- [ ] T103 [P] Verify keyboard navigation: Tab through all fields, Enter to submit, Arrow keys for select/radio options
-- [ ] T104 [P] Test with axe DevTools addon in Playwright to verify WCAG 2.1 AA compliance
-- [ ] T105 [P] Ensure form is responsive on mobile (Tailwind responsive classes)
-- [ ] T106 [P] Add visual feedback for loading/disabled states (button disabled appearance, spinner)
-- [ ] T107 [P] Write accessibility test at `tests/e2e/form-accessibility.spec.ts` using axe Playwright plugin
+- [ ] T105 [P] Add <label> elements with htmlFor attributes to all FormFieldInput components
+- [ ] T106 [P] Add aria-describedby pointing to help_text for each field
+- [ ] T107 [P] Add aria-invalid="true" to inputs with errors
+- [ ] T108 [P] Add aria-live="polite" to error message container for screen reader announcements
+- [ ] T109 [P] Verify keyboard navigation: Tab through all fields, Enter to submit, Arrow keys for select/radio options
+- [ ] T110 [P] Test with axe DevTools addon in Playwright to verify WCAG 2.1 AA compliance
+- [ ] T111 [P] Ensure form is responsive on mobile (Tailwind responsive classes)
+- [ ] T112 [P] Add visual feedback for loading/disabled states (button disabled appearance, spinner)
+- [ ] T113 [P] Write accessibility test at `tests/e2e/form-accessibility.spec.ts` using axe Playwright plugin
 
 ### Phase 6c: Testing & Quality Gates
 
@@ -376,26 +413,26 @@
 
 ### Unit Test Coverage
 
-- [ ] T108 Achieve 80%+ line coverage in:
+- [ ] T114 Achieve 80%+ line coverage in:
   - `src/features/ideas/ideaValidation.ts` → validate all field types, error messages
   - `src/features/ideas/hooks/useFormState.ts` → all reducer actions, state transitions
   - `src/features/ideas/types/formSchema.ts` → type exports (no coverage target)
-- [ ] T109 Run `npm test -- --coverage src/features/ideas/` and verify coverage meets target
+- [ ] T115 Run `npm test -- --coverage src/features/ideas/` and verify coverage meets target
 
 ### Integration Test Coverage
 
-- [ ] T110 Test all database queries (fetchFormConfig, fetchCategoriesWithFields, submitIdeaWithDynamicFields)
-- [ ] T111 Test Supabase RLS policies don't block form submissions
-- [ ] T112 Test concurrent submissions from multiple users
+- [ ] T116 Test all database queries (fetchFormConfig, fetchCategoriesWithFields, submitIdeaWithDynamicFields)
+- [ ] T117 Test Supabase RLS policies don't block form submissions
+- [ ] T118 Test concurrent submissions from multiple users
 
 ### E2E Test Coverage (Playwright)
 
-- [ ] T113 Test all 4 user story scenarios:
+- [ ] T119 Test all 4 user story scenarios:
   - US-1: Category-dependent field display and submission
   - US-2: Category-specific validation rules
   - US-3: Configuration seed is correct (hardcoded configs appear)
   - US-4: Form state preservation on category switch
-- [ ] T114 Test all edge cases:
+- [ ] T120 Test all edge cases:
   - No categories available (graceful fallback)
   - Empty form submission (validation error)
   - Network error during submission (error handling)
@@ -403,24 +440,24 @@
 
 ### Linting & Type Safety
 
-- [ ] T115 Run ESLint on all new files: `npm run lint src/features/ideas/ tests/`
-- [ ] T116 Run TypeScript check: `npm run type-check` → zero errors
-- [ ] T117 Fix all linting/type violations before merge
+- [ ] T121 Run ESLint on all new files: `npm run lint src/features/ideas/ tests/`
+- [ ] T122 Run TypeScript check: `npm run type-check` → zero errors
+- [ ] T123 Fix all linting/type violations before merge
 
 ### Performance Testing
 
-- [ ] T118 Benchmark form re-render time on category change (target: <100ms)
-- [ ] T119 Benchmark FormConfig fetch time (target: <200ms, cached after first fetch)
-- [ ] T120 Profile memory usage with large forms (5-10 field types)
+- [ ] T124 Benchmark form re-render time on category change (target: <100ms)
+- [ ] T125 Benchmark FormConfig fetch time via SWR (target: <200ms initial, <50ms cache hit)
+- [ ] T126 Profile memory usage with large forms (5-10 field types)
 
 ### Manual Testing Checklist
 
-- [ ] T121 Smoke test on development environment:
+- [ ] T127 Smoke test on development environment:
   - Create new idea → select category → fill fields → submit
   - Verify idea appears in my ideas list with correct category
   - Verify admin can view idea with all captured dynamic_form_data
-- [ ] T122 Test on multiple browsers (Chrome, Firefox, Safari)
-- [ ] T123 Test on mobile device/viewport
+- [ ] T128 Test on multiple browsers (Chrome, Firefox, Safari)
+- [ ] T129 Test on mobile device/viewport
 
 ### Phase 6d: Documentation & Code Review
 
@@ -428,15 +465,15 @@
 
 ### Documentation
 
-- [ ] T124 Update `README.md` with Phase 2 form feature description and configuration guide
-- [ ] T125 Update `CHANGELOG.md` with Phase 2 feature details (new tables, API changes, breaking changes: none)
-- [ ] T126 [P] Add inline code comments explaining validation rules engine logic (ideaValidation.ts)
-- [ ] T127 [P] Add JSDoc comments to exported functions (useFormState, fetchFormConfig, validateFormData)
-- [ ] T128 Update `.github/agents/copilot-instructions.md` with Phase 2 patterns (form state management, validation)
+- [ ] T130 Update `README.md` with Phase 2 form feature description and configuration guide
+- [ ] T131 Update `CHANGELOG.md` with Phase 2 feature details (new tables, API changes, breaking changes: none)
+- [ ] T132 [P] Add inline code comments explaining validation rules engine logic (ideaValidation.ts)
+- [ ] T133 [P] Add JSDoc comments to exported functions (useFormState, fetchFormConfig, validateFormData)
+- [ ] T134 Update `.github/agents/copilot-instructions.md` with Phase 2 patterns (form state management, validation)
 
 ### Code Review Preparation
 
-- [ ] T129 Prepare PR description linking to:
+- [ ] T135 Prepare PR description linking to:
   - Feature spec (specs/002-dynamic-forms/spec.md)
   - Implementation plan (specs/002-dynamic-forms/plan.md)
   - Test evidence (test results, coverage report)
@@ -447,13 +484,13 @@
     - ✅ Architecture: no breaking changes, backward compatible
     - ✅ AI accountability: validation engine + migrations reviewed by human
     
-- [ ] T130 Request code review specifically for:
+- [ ] T136 Request code review specifically for:
   1. **Validation Rules Engine** (src/features/ideas/ideaValidation.ts) → human must verify Zod schema builder correctness
   2. **Database Migrations** (all .sql files) → human must verify schema changes, backfill strategy, no data loss
   3. **Form State Preservation** (useFormState.ts) → human must verify state transitions on category switching
   4. **Type Safety** → human must verify TypeScript strict mode, no implicit any
   
-- [ ] T131 Ensure reviewers confirm:
+- [ ] T137 Ensure reviewers confirm:
   - Zero functional regressions (Phase 1 ideas still work)
   - All tests passing (unit, integration, e2e)
   - Code coverage >80%
@@ -462,14 +499,31 @@
 
 ### Merge to Staging/Main
 
-- [ ] T132 Deploy schema changes to staging environment (Supabase)
-- [ ] T133 Run smoke tests on staging:
+- [ ] T138 Deploy schema changes to staging environment (Supabase)
+- [ ] T139 Run smoke tests on staging:
   - New idea submission with dynamic fields
   - Phase 1 idea display
   - Admin panel (ideas list, detail view)
-- [ ] T134 Merge branch `002-dynamic-forms` to `staging` (ensure CI/CD passes all tests)
-- [ ] T135 Run E2E tests against staging environment
-- [ ] T136 After QA sign-off, merge `staging` to `main` (production deployment)
+- [ ] T140 Merge branch `002-dynamic-forms` to `staging` (ensure CI/CD passes all tests)
+- [ ] T141 Run E2E tests against staging environment
+- [ ] T142 After QA sign-off, merge `staging` to `main` (production deployment)
+
+### Post-Launch Analytics (Phase 2 Completion Validation)
+
+**Goal**: Measure success criteria SC-001 and SC-002 post-launch
+
+- [ ] T143-METRICS Implement analytics tracking for form submission metrics
+  - Track form completion time per category (compare Phase 1 baseline vs Phase 2 dynamic forms)
+  - Track first-attempt submission success rate per category
+  - Track validation error rates to identify problematic fields/categories
+  - Add tracking to IdeaForm submission handler
+  - Owner: Full-Stack Lead
+  - Timeline: Before Phase 2 production deployment
+- [ ] T144-METRICS Document SC-001 and SC-002 measurement methodology
+  - Define baseline from Phase 1 data (if available)
+  - Define success thresholds: 30% completion time reduction, 95% success rate
+  - Create dashboard or report to track metrics post-launch
+  - Schedule weekly review for first month post-launch
 
 
 ---
@@ -548,16 +602,18 @@ Phase 6 (Polish):
 
 | Phase | Focus | Task Count | Est. Days | Team |
 |-------|-------|-----------|-----------|------|
-| 1 | Infrastructure | 15 | 2-3 | DB Specialist |
-| 2 | Foundational | 18 | 2-3 | Full-Stack + DB Specialist |
+| 1 | Infrastructure | 16 | 2-3 | DB Specialist |
+| 2 | Foundational | 19 | 2-3 | Full-Stack + DB Specialist |
 | 3 | US-1: Basic Form | 14 | 3-4 | Frontend Lead |
-| 4 | US-2: Validation | 20 | 3-4 | Full-Stack |
+| 4 | US-2: Validation + Quality | 21 | 3-4 | Full-Stack |
+| 4.5 | Cache + Edge Cases | 4 | 1 | Full-Stack + QA |
 | 5 | US-4: State Preservation | 7 | 1-2 | Frontend Lead |
-| 6a | Backward Compat | 8 | 1 | QA/Test Engineer |
+| 6a | Backward Compat + Rollback | 9 | 1-2 | QA/Test Engineer + DB |
 | 6b | Accessibility | 9 | 1-2 | Frontend Lead |
 | 6c | Testing & QA | 16 | 2-3 | QA/Test Engineer |
 | 6d | Docs & Review | 12 | 1-2 | Full-Stack |
-| **TOTAL** | **—** | **136** | **15-25 days** | **3-4 people** |
+| Post-Launch | Analytics & Metrics | 2 | 0.5 | Full-Stack |
+| **TOTAL** | **—** | **125** | **16-27 days** | **3-4 people** |
 
 ---
 
@@ -657,4 +713,32 @@ Phase 6 (Polish):
 
 ---
 
-**Plan Status**: ✅ **User Story-Organized Task List Generated** → Ready for Team Assignment & Sprint Execution
+---
+
+## Analysis Findings & Fixes Applied
+
+Specification analysis identified 10 findings (1 CRITICAL, 1 HIGH, 7 MEDIUM, 1 LOW). The following fixes have been applied:
+
+✅ **A1 - Seed Categories Locked**: Added A-008 assumption specifying exact 5 categories (Process Improvement, Product Innovation, Cost Reduction, Business Process, Other)
+
+✅ **A2 - Cache Latency Task Added**: New task T085-PERF to benchmark SWR cache performance (<200ms initial, <50ms hit)
+
+✅ **A3 - Edge Case Testing Added**: New task T087-EDGE to test field type mismatch scenario during form filling
+
+✅ **A4 - Message Quality Task Added**: New task T084-QUALITY to review validation error message clarity post-implementation
+
+✅ **A5 - US-3 Scope Clarified**: Updated User Story 3 acceptance scenarios to explicitly state "Phase 2: hardcoded seed" and defer "Phase 3: admin UI"
+
+✅ **A6 - Caching Assumption Added**: Added A-009 to spec assumptions documenting SWR caching behavior and 5-minute TTL
+
+✅ **A8 - Rollback Strategy Added**: New task T096-ROLLBACK to document migration rollback procedure in `docs/deployment/migration-rollback.md`
+
+✅ **A10 - Post-Launch Metrics Added**: New tasks T143-METRICS and T144-METRICS to implement analytics tracking for SC-001, SC-002
+
+**Remaining Items** (user can resolve after launch if needed):
+- A7 (Backward compat specifics): Documented in tasks.md T099-T104; awaiting QA sign-off
+- A9 (Task count discrepancy): Resolved; actual task count is 125 (updated in all places)
+
+---
+
+**Plan Status**: ✅ **Analysis Complete - Critical Fixes Applied** → Ready for Team Assignment & Sprint Execution

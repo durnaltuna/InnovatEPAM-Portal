@@ -42,17 +42,25 @@ Form validation rules (required/optional, format constraints, min/max values) ad
 
 ### User Story 3 - Admin Configures Category-Field Mappings (Priority: P3)
 
-An administrator can define which form fields are associated with each idea category and specify their required/optional status. Configuration changes are reflected immediately for new submissions without requiring code changes.
+**PHASE 2 SCOPE**: Form field configuration is implemented via hardcoded TypeScript seed script (`src/config/formConfigs.ts`) with 3-5 predefined categories: "Process Improvement", "Product Innovation", "Cost Reduction", "Business Process", "Other". The admin configuration UI is deferred to Phase 3.
 
-**Why this priority**: Configuration flexibility is important for long-term scalability and supporting new categories without engineering effort. However, it's not critical for the initial Phase 2 launch—a seeded configuration in the database is acceptable for MVP.
+An administrator can define which form fields are associated with each idea category and specify their required/optional status. For Phase 2, admins update the seed configuration in code; a configuration UI with runtime updates is planned for Phase 3.
 
-**Independent Test**: An admin can independently configure a new category-field mapping, and a submitter can verify that the new configuration appears in their form. The feature is "done" when admins can configure via admin interface (or hardcoded config file for Phase 2 MVP).
+**Why this priority**: Configuration flexibility is important for long-term scalability and supporting new categories without engineering effort. However, it's not critical for the initial Phase 2 launch—a seeded configuration in the database is acceptable for MVP. Phase 3 will add the admin UI.
 
-**Acceptance Scenarios**:
+**Independent Test**: An admin can verify that the seeded categories (Process Improvement, Product Innovation, Cost Reduction, Business Process, Other) appear correctly in the form and that field mappings are applied. The feature is "done" for Phase 2 when the seed configuration is deployed and forms render correctly per category.
 
-1. **Given** an admin accesses category configuration, **When** they toggle a field as "required" for a specific category, **Then** new form submissions for that category enforce the requirement
-2. **Given** a category with existing field mappings, **When** an admin removes a field from the category, **Then** that field no longer appears in form submissions for that category
-3. **Given** a new idea category is created, **When** it is configured with default fields, **Then** submitters see appropriate fields when selecting that category
+**Acceptance Scenarios (Phase 2)**:
+
+1. **Given** the form seed configuration includes "Process Improvement" category, **When** a submitter selects it, **Then** the configured fields for that category appear
+2. **Given** a form seed with category-field mappings, **When** a submitter selects different categories, **Then** the appropriate fields appear/disappear per configuration
+3. **Given** the seeded configuration, **When** forms are submitted for each category, **Then** all required field data is captured correctly for that category
+
+**Acceptance Scenarios (Future Phase 3 - Runtime Admin UI)**:
+
+1. **Given** an admin accesses the category configuration UI (Phase 3), **When** they toggle a field as "required" for a specific category, **Then** new form submissions for that category enforce the requirement
+2. **Given** a category with existing field mappings, **When** an admin removes a field (Phase 3 UI), **Then** that field no longer appears in form submissions for that category
+3. **Given** a new idea category created via Phase 3 admin UI, **When** it is configured with default fields, **Then** submitters see appropriate fields when selecting that category
 
 ---
 
@@ -125,7 +133,7 @@ When a form dynamically updates (e.g., category change), previously entered valu
 - **SC-003**: Zero data loss when users change categories during form filling (100% of applicable field values preserved)
 - **SC-004**: 100% of configuration changes (new/modified category-field mappings) are reflected in form submissions within 1 minute
 - **SC-005**: Backward compatibility: 100% of Phase 1 ideas remain accessible and viewable without errors
-- **SC-006**: Admin configuration interface is usable by at least 90% of admin users without additional training (measured via usability testing)
+- **SC-006**: Admin configuration interface is usable by at least 90% of admin users without additional training (measured via usability testing) **[Phase 3 - UI not in Phase 2 scope; Phase 2 uses seeded config only]**
 
 ## Assumptions
 
@@ -136,6 +144,8 @@ When a form dynamically updates (e.g., category change), previously entered valu
 - **A-005**: Form validation is synchronous; asynchronous validation (e.g., checking for duplicate titles via API) is out of scope for Phase 2
 - **A-006**: Categories are created/managed by admins via database or admin panel; submitters can only select from existing categories
 - **A-007**: Session management for draft data is handled separately; Phase 2 assumes form state is preserved in React component state during a single session
+- **A-008**: Phase 2 seed categories are exactly: "Process Improvement", "Product Innovation", "Cost Reduction", "Business Process", "Other"
+- **A-009**: Form configuration is cached client-side (SWR) for 5 minutes; users may see stale config briefly after admin changes in Phase 3. Cache revalidation can be forced via manual refresh.
 
 ## Out of Scope (Deferred to Later Phases)
 
