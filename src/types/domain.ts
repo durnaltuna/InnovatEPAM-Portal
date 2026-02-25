@@ -45,18 +45,21 @@ export interface Attachment {
   uploadedAt: Date;
 }
 
-export type DecisionOutcome = 'Under Review' | 'Accepted' | 'Rejected';
-
 export interface Decision {
   id: string;
   ideaId: string;
   adminId: string;
-  outcome: DecisionOutcome;
+  outcome: IdeaStatus;
   comment: string;
   decidedAt: Date;
 }
 
-export interface DecisionHistoryEntry extends Decision {
-  fromStatus: IdeaStatus;
+export interface DecisionHistoryEntry {
+  id: string;
+  ideaId: string;
+  fromStatus: IdeaStatus | null;
   toStatus: IdeaStatus;
+  comment: string | null;
+  actorId: string;
+  createdAt: Date;
 }

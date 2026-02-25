@@ -2,12 +2,15 @@ import { useEffect, useState } from 'react';
 import { getSessionUser } from '../auth/authService';
 import { getIdeasBySubmitter } from './ideaService';
 import { getAttachmentByIdeaId } from './attachmentService';
-import type { Idea, Attachment } from '../../types/domain';
+import { getDecisionVisibleToSubmitter } from './ideaQueries';
+import type { Idea, Attachment, Decision } from '../../types/domain';
 import { IdeaForm } from './IdeaForm';
+import { DecisionSummary } from './DecisionSummary';
 
 export function MyIdeasPage() {
   const [ideas, setIdeas] = useState<Idea[]>([]);
   const [attachments, setAttachments] = useState<Record<string, Attachment | null>>({});
+  const [decisions, setDecisions] = useState<Record<string, Decision | null>>({});
   const [isLoading, setIsLoading] = useState(false);
 
   async function loadIdeas(): Promise<void> {
@@ -28,6 +31,13 @@ export function MyIdeasPage() {
         atts[idea.id] = await getAttachmentByIdeaId(idea.id);
       }
       setAttachments(atts);
+
+      // Load decisions for each idea
+      const decs: Record<string, Decision | null> = {};
+      for (const idea of userIdeas) {
+        decs[idea.id] = await getDecisionVisibleToSubmitter(idea.id, user.id);
+      }
+      setDecisions(decs);
     } catch (error) {
       console.error('Failed to load ideas:', error);
     } finally {
@@ -107,6 +117,7 @@ export function MyIdeasPage() {
                       <strong>Attachment:</strong> {attachments[idea.id]!.fileName} ✓
                     </p>
                   )}
+                  {decisions[idea.id] && <DecisionSummary decision={decisions[idea.id]!} />}
                   <p style={{ margin: '8px 0', fontSize: '10px', color: '#bbb' }}>
                     Created: {new Date(idea.createdAt).toLocaleString()}
                   </p>

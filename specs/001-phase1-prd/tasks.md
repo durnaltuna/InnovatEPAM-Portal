@@ -50,7 +50,7 @@
 - [X] T016 [US1] Implement auth service operations (login/logout/session) in src/features/auth/authService.ts
 - [X] T017 [US1] Implement login page and form behavior in src/features/auth/LoginPage.tsx
 - [X] T018 [US1] Implement logout control and protected app entry in src/app/AppShell.tsx
-- [ ] T019 [US1] Wire auth routes and role context provider in src/app/router.tsx
+- [X] T019 [US1] Wire auth routes and role context provider in src/app/router.tsx
 
 **Checkpoint**: User login access is fully functional and independently testable.
 
@@ -87,16 +87,16 @@
 
 ### Tests for User Story 3
 
-- [ ] T027 [P] [US3] Add unit tests for decision validation and role restrictions in tests/unit/admin-decision-rules.test.ts
-- [ ] T028 [P] [US3] Add integration tests for Submitted -> Under Review transition and persistence in tests/integration/admin-decisions.test.ts
-- [ ] T029 [P] [US3] Add e2e test for Under Review -> Accepted/Rejected workflow in tests/e2e/admin-decisions.spec.ts
+- [X] T027 [P] [US3] Add unit tests for decision validation and role restrictions in tests/unit/admin-decision-rules.test.ts
+- [X] T028 [P] [US3] Add integration tests for Submitted -> Under Review transition and persistence in tests/integration/admin-decisions.test.ts
+- [X] T029 [P] [US3] Add e2e test for Under Review -> Accepted/Rejected workflow in tests/e2e/admin-decisions.spec.ts
 
 ### Implementation for User Story 3
 
-- [ ] T030 [US3] Implement admin decision service with Submitted -> Under Review -> Accepted/Rejected transitions in src/features/admin/decisionService.ts
-- [ ] T031 [US3] Implement admin ideas review table in src/features/admin/AdminIdeasPage.tsx
-- [ ] T032 [US3] Implement decision action modal with conditional required comment for final decisions in src/features/admin/DecisionModal.tsx
-- [ ] T033 [US3] Persist decision history entries and latest decision projection in src/features/admin/decisionHistoryService.ts
+- [X] T030 [US3] Implement admin decision service with Submitted -> Under Review -> Accepted/Rejected transitions in src/features/admin/decisionService.ts
+- [X] T031 [US3] Implement admin ideas review table in src/features/admin/AdminIdeasPage.tsx
+- [X] T032 [US3] Implement decision action modal with conditional required comment for final decisions in src/features/admin/DecisionModal.tsx
+- [X] T033 [US3] Persist decision history entries and latest decision projection in src/features/admin/decisionHistoryService.ts
 
 **Checkpoint**: Admin decision workflow is fully functional and independently testable.
 
@@ -110,15 +110,15 @@
 
 ### Tests for User Story 4
 
-- [ ] T034 [P] [US4] Add unit tests for submitter visibility filters in tests/unit/idea-visibility.test.ts
-- [ ] T035 [P] [US4] Add integration tests for decision/comment visibility in tests/integration/submitter-decision-visibility.test.ts
-- [ ] T036 [P] [US4] Add e2e test for submitter outcome visibility after admin action in tests/e2e/submitter-outcomes.spec.ts
+- [X] T034 [P] [US4] Add unit tests for submitter visibility filters in tests/unit/idea-visibility.test.ts
+- [X] T035 [P] [US4] Add integration tests for decision/comment visibility in tests/integration/submitter-decision-visibility.test.ts
+- [X] T036 [P] [US4] Add e2e test for submitter outcome visibility after admin action in tests/e2e/submitter-outcomes.spec.ts
 
 ### Implementation for User Story 4
 
-- [ ] T037 [US4] Implement idea detail view with decision metadata in src/features/ideas/IdeaDetailPage.tsx
-- [ ] T038 [US4] Implement submitter-only data query filters in src/features/ideas/ideaQueries.ts
-- [ ] T039 [US4] Integrate decision status/comment rendering in src/features/ideas/DecisionSummary.tsx
+- [X] T037 [US4] Implement idea detail view with decision metadata in src/features/ideas/IdeaDetailPage.tsx
+- [X] T038 [US4] Implement submitter-only data query filters in src/features/ideas/ideaQueries.ts
+- [X] T039 [US4] Integrate decision status/comment rendering in src/features/ideas/DecisionSummary.tsx
 
 **Checkpoint**: Submitter decision visibility is fully functional and independently testable.
 
@@ -130,9 +130,9 @@
 
 - [ ] T040 [P] Add end-to-end smoke flow covering US1→US4 in tests/e2e/mvp-smoke.spec.ts
 - [ ] T041 [P] Add missing edge-case integration tests from spec edge cases in tests/integration/edge-cases.test.ts
-- [ ] T042 Update implementation notes and runbook in specs/001-phase1-prd/quickstart.md
-- [ ] T043 Add PR reviewer traceability matrix (FR/SC to tests) in specs/001-phase1-prd/checklists/traceability.md
-- [ ] T044 Run `npm run lint`, `npm run typecheck`, `npm run build`, `npm run test`, and `npm run test:e2e`, and capture command outputs/references in specs/001-phase1-prd/checklists/release-evidence.md
+- [X] T042 Update implementation notes and runbook in specs/001-phase1-prd/quickstart.md
+- [X] T043 Add PR reviewer traceability matrix (FR/SC to tests) in specs/001-phase1-prd/checklists/traceability.md
+- [X] T044 Run `npm run lint`, `npm run typecheck`, `npm run build`, `npm run test`, and `npm run test:e2e`, and capture command outputs/references in specs/001-phase1-prd/checklists/release-evidence.md
 - [ ] T045 [P] Add automated measurement for SC-001 login time threshold in tests/e2e/performance-login.spec.ts
 - [ ] T046 [P] Add automated measurement for SC-002 submission completion threshold in tests/e2e/performance-submission.spec.ts
 - [ ] T047 [P] Add automated measurement for SC-003 status-visibility latency threshold in tests/integration/performance-status-visibility.test.ts
