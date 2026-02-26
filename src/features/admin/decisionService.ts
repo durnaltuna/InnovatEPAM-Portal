@@ -223,3 +223,13 @@ export async function getAllDecisions(): Promise<Decision[]> {
   const decisions = getStoredDecisions();
   return decisions.map(toDecision);
 }
+
+export async function deleteDecisionsForIdea(ideaId: string): Promise<void> {
+  const decisions = getStoredDecisions();
+  const filteredDecisions = decisions.filter((decision) => decision.ideaId !== ideaId);
+  saveStoredDecisions(filteredDecisions);
+
+  const history = getStoredDecisionHistory();
+  const filteredHistory = history.filter((entry) => entry.ideaId !== ideaId);
+  saveStoredDecisionHistory(filteredHistory);
+}

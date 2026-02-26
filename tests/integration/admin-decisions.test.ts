@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { createIdea, getIdea } from '../../src/features/ideas/ideaService';
+import { createIdea, deleteIdea, getIdea } from '../../src/features/ideas/ideaService';
+import { deleteAttachment, getAttachmentByIdeaId, uploadAttachment } from '../../src/features/ideas/attachmentService';
 import {
+  deleteDecisionsForIdea,
   makeDecision,
   getDecision,
   getDecisionHistory
@@ -164,6 +166,29 @@ describe('Admin Decision Persistence', () => {
       const times = history.map((h) => new Date(h.createdAt).getTime());
       expect(times.length).toBeGreaterThanOrEqual(2);
       expect(times[1]!).toBeGreaterThanOrEqual(times[0]!);
+    });
+  });
+
+  describe('delete cleanup flow', () => {
+    it('removes idea, attachment, decision, and history for a deleted idea', async () => {
+      const file = new File(['sample'], 'evidence.txt', { type: 'text/plain' });
+      await uploadAttachment(ideaId, file);
+      await makeDecision(ideaId, adminFixture.id, 'Under Review', 'triage');
+      await makeDecision(ideaId, adminFixture.id, 'Accepted', 'approved');
+
+      await deleteAttachment(ideaId);
+      await deleteDecisionsForIdea(ideaId);
+      await deleteIdea(ideaId);
+
+      const deletedIdea = await getIdea(ideaId);
+      const deletedAttachment = await getAttachmentByIdeaId(ideaId);
+      const deletedDecision = await getDecision(ideaId);
+      const deletedHistory = await getDecisionHistory(ideaId);
+
+      expect(deletedIdea).toBeNull();
+      expect(deletedAttachment).toBeNull();
+      expect(deletedDecision).toBeNull();
+      expect(deletedHistory).toEqual([]);
     });
   });
 });

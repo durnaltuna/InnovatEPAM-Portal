@@ -82,3 +82,15 @@ export async function updateIdeaStatus(ideaId: string, status: IdeaStatus): Prom
 
   return toIdea(idea);
 }
+
+export async function deleteIdea(ideaId: string): Promise<void> {
+  const ideas = getStoredIdeas();
+  const exists = ideas.some((idea) => idea.id === ideaId);
+
+  if (!exists) {
+    throw new Error(`Idea ${ideaId} not found.`);
+  }
+
+  const filtered = ideas.filter((idea) => idea.id !== ideaId);
+  saveStoredIdeas(filtered);
+}

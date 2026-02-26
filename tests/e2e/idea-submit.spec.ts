@@ -21,7 +21,7 @@ test.describe('Idea Submission - Submitter Flow', () => {
     // Fill idea form
     await page.fill('input[id="idea-title"]', 'Automated Test Idea');
     await page.fill('textarea[id="idea-description"]', 'This idea was submitted via automated test');
-    await page.fill('input[id="idea-category"]', 'Process Improvement');
+    await page.selectOption('select[id="idea-category"]', 'Process improvement');
 
     // Upload a file
     const filePath = 'tests/fixtures/test-file.txt';
@@ -36,7 +36,7 @@ test.describe('Idea Submission - Submitter Flow', () => {
     // Verify idea appears in the list
     await expect(page.locator('h3:has-text("Automated Test Idea")')).toBeVisible();
     await expect(page.locator('text=Status.*Submitted')).toBeVisible();
-    await expect(page.locator('text=Process Improvement')).toBeVisible();
+    await expect(page.locator('text=Process improvement')).toBeVisible();
   });
 
   test('submitter sees submitted idea in list', async ({ page }) => {
@@ -45,7 +45,7 @@ test.describe('Idea Submission - Submitter Flow', () => {
     // Submit an idea
     await page.fill('input[id="idea-title"]', ideaTitle);
     await page.fill('textarea[id="idea-description"]', 'Test description for listing');
-    await page.fill('input[id="idea-category"]', 'Technology');
+    await page.selectOption('select[id="idea-category"]', 'Customer Experience');
 
     const filePath = 'tests/fixtures/test-file.txt';
     await page.locator('input[type="file"]').setInputFiles(filePath);
@@ -85,7 +85,7 @@ test.describe('Idea Submission - Submitter Flow', () => {
     // Now try without title
     await page.fill('input[id="idea-title"]', '');
     await page.fill('textarea[id="idea-description"]', 'Description');
-    await page.fill('input[id="idea-category"]', 'Category');
+    await page.selectOption('select[id="idea-category"]', 'Internal tools');
 
     // Form should not submit due to HTML5 validation
     // Verify error states or validation
@@ -101,7 +101,8 @@ test.describe('Idea Submission - Submitter Flow', () => {
     // Submit an idea
     await page.fill('input[id="idea-title"]', 'Status Badge Test');
     await page.fill('textarea[id="idea-description"]', 'Testing status display');
-    await page.fill('input[id="idea-category"]', 'Other');
+    await page.selectOption('select[id="idea-category"]', 'Other');
+    await page.fill('input[id="idea-category-other"]', 'Pilot category');
 
     const filePath = 'tests/fixtures/test-file.txt';
     await page.locator('input[type="file"]').setInputFiles(filePath);
@@ -127,7 +128,7 @@ test.describe('Idea Submission - Submitter Flow', () => {
     // Submit an idea
     await page.fill('input[id="idea-title"]', 'Reset Test Idea');
     await page.fill('textarea[id="idea-description"]', 'Testing form reset');
-    await page.fill('input[id="idea-category"]', 'Process');
+    await page.selectOption('select[id="idea-category"]', 'Cost optimization');
 
     const filePath = 'tests/fixtures/test-file.txt';
     await page.locator('input[type="file"]').setInputFiles(filePath);
@@ -138,7 +139,7 @@ test.describe('Idea Submission - Submitter Flow', () => {
     // Verify form fields are cleared
     const titleInput = page.locator('input[id="idea-title"]');
     const descInput = page.locator('textarea[id="idea-description"]');
-    const catInput = page.locator('input[id="idea-category"]');
+    const catInput = page.locator('select[id="idea-category"]');
 
     expect(await titleInput.inputValue()).toBe('');
     expect(await descInput.inputValue()).toBe('');

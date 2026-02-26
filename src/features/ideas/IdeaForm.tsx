@@ -5,13 +5,24 @@ import { createIdea } from './ideaService';
 import { uploadAttachment } from './attachmentService';
 import { getSessionUser } from '../auth/authService';
 
+const CATEGORY_OPTIONS = [
+  'Process improvement',
+  'New Product',
+  'Customer Experience',
+  'Internal tools',
+  'Cost optimization'
+] as const;
+
 export function IdeaForm() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [otherCategory, setOtherCategory] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const category = selectedCategory === 'Other' ? otherCategory : selectedCategory;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
@@ -51,7 +62,8 @@ export function IdeaForm() {
       setMessage(`✅ Idea "${idea.title}" submitted successfully with status: ${idea.status}`);
       setTitle('');
       setDescription('');
-      setCategory('');
+      setSelectedCategory('');
+      setOtherCategory('');
       if (fileInput) {
         fileInput.value = '';
       }
@@ -80,7 +92,36 @@ export function IdeaForm() {
         />
 
         <label htmlFor="idea-category">Category</label>
-        <input id="idea-category" value={category} onChange={(event) => setCategory(event.target.value)} required disabled={isSubmitting} />
+        <select
+          id="idea-category"
+          value={selectedCategory}
+          onChange={(event) => setSelectedCategory(event.target.value)}
+          required
+          disabled={isSubmitting}
+        >
+          <option value="" disabled>
+            Select category
+          </option>
+          {CATEGORY_OPTIONS.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+          <option value="Other">Other</option>
+        </select>
+
+        {selectedCategory === 'Other' ? (
+          <>
+            <label htmlFor="idea-category-other">Other category</label>
+            <input
+              id="idea-category-other"
+              value={otherCategory}
+              onChange={(event) => setOtherCategory(event.target.value)}
+              required
+              disabled={isSubmitting}
+            />
+          </>
+        ) : null}
 
         <label htmlFor="idea-attachment">Attachment (exactly one file)</label>
         <input id="idea-attachment" name="attachment" type="file" required disabled={isSubmitting} />

@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { isValidDecisionComment } from './decisionService';
-import type { Idea, IdeaStatus } from '../../types/domain';
+import type { Attachment, Idea, IdeaStatus } from '../../types/domain';
 
 interface DecisionModalProps {
   idea: Idea;
+  attachment: Attachment | null;
   onConfirm: (outcome: string, comment: string) => void;
   onClose: () => void;
 }
 
-export function DecisionModal({ idea, onConfirm, onClose }: DecisionModalProps) {
+export function DecisionModal({ idea, attachment, onConfirm, onClose }: DecisionModalProps) {
   const [selectedOutcome, setSelectedOutcome] = useState<string>('');
   const [comment, setComment] = useState('');
   const [error, setError] = useState('');
@@ -78,6 +79,9 @@ export function DecisionModal({ idea, onConfirm, onClose }: DecisionModalProps) 
       >
         <h3>{idea.title}</h3>
         <p style={{ color: '#666', marginBottom: 16 }}>{idea.description}</p>
+        <p style={{ color: '#666', marginBottom: 16, fontSize: 13 }}>
+          <strong>Attachment:</strong> {attachment ? attachment.fileName : 'None'}
+        </p>
 
         <div style={{ marginBottom: 16 }}>
           <label htmlFor="decision" style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>
