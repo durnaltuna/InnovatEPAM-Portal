@@ -58,7 +58,7 @@ export function DecisionModal({ idea, attachment, onConfirm, onClose }: Decision
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(20, 31, 53, 0.34)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -68,18 +68,20 @@ export function DecisionModal({ idea, attachment, onConfirm, onClose }: Decision
     >
       <div
         style={{
-          backgroundColor: 'white',
-          borderRadius: 8,
+          backgroundColor: 'rgba(255, 255, 255, 0.94)',
+          border: '1px solid rgba(172, 186, 208, 0.42)',
+          borderRadius: 14,
           padding: 24,
           maxWidth: 500,
           width: '90%',
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+          boxShadow: '0 20px 46px -26px rgba(22, 40, 74, 0.8)',
+          backdropFilter: 'blur(8px)'
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <h3>{idea.title}</h3>
-        <p style={{ color: '#666', marginBottom: 16 }}>{idea.description}</p>
-        <p style={{ color: '#666', marginBottom: 16, fontSize: 13 }}>
+        <p style={{ color: '#6f7f96', marginBottom: 16 }}>{idea.description}</p>
+        <p style={{ color: '#6f7f96', marginBottom: 16, fontSize: 13 }}>
           <strong>Attachment:</strong> {attachment ? attachment.fileName : 'None'}
         </p>
 
@@ -98,8 +100,9 @@ export function DecisionModal({ idea, attachment, onConfirm, onClose }: Decision
             style={{
               width: '100%',
               padding: '8px 12px',
-              border: '1px solid #ddd',
-              borderRadius: 4,
+              border: '1px solid rgba(172, 186, 208, 0.42)',
+              borderRadius: 10,
+              backgroundColor: 'rgba(255, 255, 255, 0.92)',
               fontSize: 14
             }}
           >
@@ -116,7 +119,7 @@ export function DecisionModal({ idea, attachment, onConfirm, onClose }: Decision
           <div style={{ marginBottom: 16 }}>
             <label htmlFor="comment" style={{ display: 'block', marginBottom: 8, fontWeight: 'bold' }}>
               Comment:
-              {requiresComment && <span style={{ color: '#d32f2f' }}> *</span>}
+              {requiresComment && <span style={{ color: '#d0445f' }}> *</span>}
             </label>
             <textarea
               id="comment"
@@ -129,8 +132,9 @@ export function DecisionModal({ idea, attachment, onConfirm, onClose }: Decision
               style={{
                 width: '100%',
                 padding: '8px 12px',
-                border: '1px solid #ddd',
-                borderRadius: 4,
+                border: '1px solid rgba(172, 186, 208, 0.42)',
+                borderRadius: 10,
+                backgroundColor: 'rgba(255, 255, 255, 0.92)',
                 fontSize: 14,
                 fontFamily: 'inherit',
                 resize: 'vertical',
@@ -139,7 +143,7 @@ export function DecisionModal({ idea, attachment, onConfirm, onClose }: Decision
               }}
             />
             {requiresComment && (
-              <p style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
+              <p style={{ fontSize: 12, color: '#6f7f96', marginTop: 4 }}>
                 Comment is required for {selectedOutcome} decision.
               </p>
             )}
@@ -147,7 +151,16 @@ export function DecisionModal({ idea, attachment, onConfirm, onClose }: Decision
         )}
 
         {error && (
-          <div style={{ color: '#d32f2f', marginBottom: 16, padding: 8, backgroundColor: '#ffebee', borderRadius: 4 }}>
+          <div
+            style={{
+              color: '#d0445f',
+              marginBottom: 16,
+              padding: 8,
+              backgroundColor: '#ffe9ed',
+              borderRadius: 8,
+              border: '1px solid rgba(208, 68, 95, 0.2)'
+            }}
+          >
             {error}
           </div>
         )}
@@ -158,9 +171,11 @@ export function DecisionModal({ idea, attachment, onConfirm, onClose }: Decision
             onClick={onClose}
             style={{
               padding: '8px 16px',
-              backgroundColor: '#f5f5f5',
-              border: '1px solid #ddd',
-              borderRadius: 4,
+              background: 'rgba(236, 241, 250, 0.95)',
+              color: '#2f3b51',
+              border: '1px solid rgba(172, 186, 208, 0.6)',
+              borderRadius: 10,
+              boxShadow: 'none',
               cursor: 'pointer'
             }}
           >
@@ -172,10 +187,11 @@ export function DecisionModal({ idea, attachment, onConfirm, onClose }: Decision
             disabled={!selectedOutcome || !isCommentValid}
             style={{
               padding: '8px 16px',
-              backgroundColor: selectedOutcome && isCommentValid ? '#4caf50' : '#ccc',
+              backgroundColor: selectedOutcome && isCommentValid ? '#2f8f61' : '#b3bdd3',
               color: 'white',
               border: 'none',
-              borderRadius: 4,
+              borderRadius: 10,
+              boxShadow: selectedOutcome && isCommentValid ? '0 8px 20px -12px rgba(34, 115, 76, 0.9)' : 'none',
               cursor: selectedOutcome && isCommentValid ? 'pointer' : 'not-allowed'
             }}
           >

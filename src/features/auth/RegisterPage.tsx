@@ -24,9 +24,33 @@ export function RegisterPage() {
   }
 
   return (
-    <main style={{ fontFamily: 'system-ui', margin: '0 auto', maxWidth: 480, padding: 24 }}>
+    <main
+      style={{
+        fontFamily: 'system-ui',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 24,
+        boxSizing: 'border-box'
+      }}
+    >
+      <div
+        style={{
+          margin: '0 auto',
+          maxWidth: 480,
+          width: '100%',
+          padding: 28,
+          transform: 'translateY(-28px)',
+        borderRadius: 18,
+        border: '1px solid rgba(172, 186, 208, 0.42)',
+        backgroundColor: 'rgba(255, 255, 255, 0.86)',
+        boxShadow: '0 20px 50px -36px rgba(25, 47, 89, 0.9)',
+        backdropFilter: 'blur(10px)'
+      }}
+    >
       <h1>Register</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12 }}>
+      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12, marginTop: 16 }}>
         <label htmlFor="email">Email</label>
         <input id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
 
@@ -46,12 +70,13 @@ export function RegisterPage() {
           <option value="admin">Admin</option>
         </select>
 
-        {error ? <p style={{ color: 'crimson' }}>{error}</p> : null}
+        {error ? <p style={{ color: '#d0445f' }}>{error}</p> : null}
         <button type="submit">Register</button>
       </form>
-      <p>
+      <p style={{ marginTop: 16 }}>
         Already have an account? <Link to="/login">Login</Link>
       </p>
+      </div>
     </main>
   );
 }

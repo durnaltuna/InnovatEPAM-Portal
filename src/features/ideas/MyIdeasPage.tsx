@@ -54,7 +54,7 @@ export function MyIdeasPage() {
       <h1>My Ideas</h1>
 
       <section style={{ marginBottom: 32 }}>
-        <IdeaForm />
+        <IdeaForm onSubmitted={loadIdeas} />
       </section>
 
       <section>
@@ -62,7 +62,7 @@ export function MyIdeasPage() {
         {isLoading ? (
           <p>Loading...</p>
         ) : ideas.length === 0 ? (
-          <p style={{ color: '#666' }}>No ideas submitted yet. Create your first idea above!</p>
+          <p style={{ color: '#6f7f96' }}>No ideas submitted yet. Create your first idea above!</p>
         ) : (
           <div style={{ display: 'grid', gap: 16 }}>
             {ideas
@@ -71,36 +71,37 @@ export function MyIdeasPage() {
                 <div
                   key={idea.id}
                   style={{
-                    border: '1px solid #ddd',
-                    borderRadius: 8,
+                    border: '1px solid rgba(172, 186, 208, 0.42)',
+                    borderRadius: 12,
                     padding: 16,
-                    backgroundColor: '#f9f9f9'
+                    backgroundColor: 'rgba(255, 255, 255, 0.78)',
+                    boxShadow: '0 14px 32px -28px rgba(22, 40, 74, 0.85)'
                   }}
                 >
                   <h3>{idea.title}</h3>
-                  <p style={{ margin: '8px 0', color: '#666' }}>
+                  <p style={{ margin: '8px 0', color: '#6f7f96' }}>
                     <strong>Status:</strong>{' '}
                     <span
                       style={{
                         display: 'inline-block',
                         padding: '4px 8px',
-                        borderRadius: 4,
+                        borderRadius: 999,
                         backgroundColor:
                           idea.status === 'Submitted'
-                            ? '#e3f2fd'
+                            ? '#e8eeff'
                             : idea.status === 'Under Review'
-                              ? '#fff3e0'
+                              ? '#fff2df'
                               : idea.status === 'Accepted'
-                                ? '#e8f5e9'
-                                : '#ffebee',
+                                ? '#e7f7ef'
+                                : '#ffe9ed',
                         color:
                           idea.status === 'Submitted'
-                            ? '#1976d2'
+                            ? '#2b4efe'
                             : idea.status === 'Under Review'
-                              ? '#f57c00'
+                              ? '#be7b15'
                               : idea.status === 'Accepted'
-                                ? '#388e3c'
-                                : '#d32f2f',
+                                ? '#2f8f61'
+                                : '#d0445f',
                         fontSize: '12px',
                         fontWeight: 'bold'
                       }}
@@ -109,16 +110,16 @@ export function MyIdeasPage() {
                     </span>
                   </p>
                   <p style={{ margin: '8px 0' }}>{idea.description}</p>
-                  <p style={{ margin: '8px 0', fontSize: '12px', color: '#999' }}>
+                  <p style={{ margin: '8px 0', fontSize: '12px', color: '#8291a8' }}>
                     <strong>Category:</strong> {idea.category}
                   </p>
                   {attachments[idea.id] && (
-                    <p style={{ margin: '8px 0', fontSize: '12px', color: '#666' }}>
+                    <p style={{ margin: '8px 0', fontSize: '12px', color: '#6f7f96' }}>
                       <strong>Attachment:</strong> {attachments[idea.id]!.fileName} ✓
                     </p>
                   )}
                   {decisions[idea.id] && <DecisionSummary decision={decisions[idea.id]!} />}
-                  <p style={{ margin: '8px 0', fontSize: '10px', color: '#bbb' }}>
+                  <p style={{ margin: '8px 0', fontSize: '10px', color: '#94a2b7' }}>
                     Created: {new Date(idea.createdAt).toLocaleString()}
                   </p>
                 </div>

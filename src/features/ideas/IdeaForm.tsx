@@ -13,7 +13,11 @@ const CATEGORY_OPTIONS = [
   'Cost optimization'
 ] as const;
 
-export function IdeaForm() {
+interface IdeaFormProps {
+  onSubmitted?: () => void | Promise<void>;
+}
+
+export function IdeaForm({ onSubmitted }: IdeaFormProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -67,6 +71,10 @@ export function IdeaForm() {
       if (fileInput) {
         fileInput.value = '';
       }
+
+      if (onSubmitted) {
+        await onSubmitted();
+      }
     } catch (caught) {
       setError(mapError(caught));
     } finally {
@@ -77,7 +85,18 @@ export function IdeaForm() {
   return (
     <section>
       <h2>Submit Idea</h2>
-      <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12, maxWidth: 600 }}>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          display: 'grid',
+          gap: 12,
+          maxWidth: 600,
+          padding: 18,
+          borderRadius: 14,
+          border: '1px solid rgba(172, 186, 208, 0.42)',
+          backgroundColor: 'rgba(255, 255, 255, 0.72)'
+        }}
+      >
         <label htmlFor="idea-title">Title</label>
         <input id="idea-title" value={title} onChange={(event) => setTitle(event.target.value)} required disabled={isSubmitting} />
 
@@ -130,8 +149,8 @@ export function IdeaForm() {
           {isSubmitting ? 'Submitting...' : 'Submit Idea'}
         </button>
       </form>
-      {message ? <p style={{ color: 'green' }}>{message}</p> : null}
-      {error ? <p style={{ color: 'crimson' }}>{error}</p> : null}
+      {message ? <p style={{ color: '#2f8f61' }}>{message}</p> : null}
+      {error ? <p style={{ color: '#d0445f' }}>{error}</p> : null}
     </section>
   );
 }

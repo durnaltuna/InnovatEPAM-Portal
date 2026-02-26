@@ -86,22 +86,23 @@ export function AdminIdeasPage() {
   return (
     <main>
       <h2>Admin Ideas Review</h2>
-      {error ? <p style={{ color: 'crimson' }}>{error}</p> : null}
+      {error ? <p style={{ color: '#d0445f' }}>{error}</p> : null}
       {isLoading ? (
         <p>Loading ideas...</p>
       ) : ideas.length === 0 ? (
-        <p style={{ color: '#666' }}>No ideas submitted yet.</p>
+        <p style={{ color: '#6f7f96' }}>No ideas submitted yet.</p>
       ) : (
         <div style={{ overflowX: 'auto' }}>
           <table
             style={{
               width: '100%',
               borderCollapse: 'collapse',
-              marginTop: 16
+              marginTop: 16,
+              boxShadow: '0 16px 38px -30px rgba(22, 40, 74, 0.85)'
             }}
           >
             <thead>
-              <tr style={{ backgroundColor: '#f5f5f5', borderBottom: '2px solid #ddd' }}>
+              <tr style={{ backgroundColor: 'rgba(243, 247, 255, 0.95)', borderBottom: '2px solid rgba(172, 186, 208, 0.55)' }}>
                 <th style={{ padding: 12, textAlign: 'left' }}>Title</th>
                 <th style={{ padding: 12, textAlign: 'left' }}>Description</th>
                 <th style={{ padding: 12, textAlign: 'left' }}>Attachment</th>
@@ -121,12 +122,12 @@ export function AdminIdeasPage() {
                   const canDecide = idea.status === 'Under Review';
 
                   return (
-                    <tr key={idea.id} style={{ borderBottom: '1px solid #ddd' }}>
+                    <tr key={idea.id} style={{ borderBottom: '1px solid rgba(172, 186, 208, 0.42)' }}>
                       <td style={{ padding: 12 }}>
                         <strong>{idea.title}</strong>
                       </td>
                       <td style={{ padding: 12, maxWidth: 320, whiteSpace: 'pre-wrap', fontSize: '14px' }}>{idea.description}</td>
-                      <td style={{ padding: 12, fontSize: '12px', color: '#666' }}>
+                      <td style={{ padding: 12, fontSize: '12px', color: '#6f7f96' }}>
                         {attachment ? attachment.fileName : 'No attachment'}
                       </td>
                       <td style={{ padding: 12 }}>{idea.submitterId}</td>
@@ -135,23 +136,23 @@ export function AdminIdeasPage() {
                           style={{
                             display: 'inline-block',
                             padding: '4px 8px',
-                            borderRadius: 4,
+                            borderRadius: 999,
                             backgroundColor:
                               idea.status === 'Submitted'
-                                ? '#e3f2fd'
+                                ? '#e8eeff'
                                 : idea.status === 'Under Review'
-                                  ? '#fff3e0'
+                                  ? '#fff2df'
                                   : idea.status === 'Accepted'
-                                    ? '#e8f5e9'
-                                    : '#ffebee',
+                                    ? '#e7f7ef'
+                                    : '#ffe9ed',
                             color:
                               idea.status === 'Submitted'
-                                ? '#1976d2'
+                                ? '#2b4efe'
                                 : idea.status === 'Under Review'
-                                  ? '#f57c00'
+                                  ? '#be7b15'
                                   : idea.status === 'Accepted'
-                                    ? '#388e3c'
-                                    : '#d32f2f',
+                                    ? '#2f8f61'
+                                    : '#d0445f',
                             fontSize: '12px',
                             fontWeight: 'bold'
                           }}
@@ -159,7 +160,7 @@ export function AdminIdeasPage() {
                           {idea.status}
                         </span>
                       </td>
-                      <td style={{ padding: 12, fontSize: '12px', color: '#666' }}>
+                      <td style={{ padding: 12, fontSize: '12px', color: '#6f7f96' }}>
                         {decision ? (
                           <>
                             <div>
@@ -183,7 +184,7 @@ export function AdminIdeasPage() {
                               onClick={() => openDecisionModal(idea)}
                               style={{
                                 padding: '4px 12px',
-                                backgroundColor: '#ff9800',
+                                backgroundColor: '#be7b15',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: 4,
@@ -199,7 +200,7 @@ export function AdminIdeasPage() {
                               onClick={() => openDecisionModal(idea)}
                               style={{
                                 padding: '4px 12px',
-                                backgroundColor: '#4caf50',
+                                backgroundColor: '#2f8f61',
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: 4,
@@ -214,7 +215,7 @@ export function AdminIdeasPage() {
                             onClick={() => handleDeleteIdea(idea.id, idea.title)}
                             style={{
                               padding: '4px 12px',
-                              backgroundColor: '#d32f2f',
+                              background: '#d32f2f',
                               color: 'white',
                               border: 'none',
                               borderRadius: 4,
@@ -224,7 +225,7 @@ export function AdminIdeasPage() {
                             Delete
                           </button>
                           {!canReview && !canDecide && (
-                            <span style={{ color: '#999', fontSize: '12px' }}>Decided</span>
+                            <span style={{ color: '#8291a8', fontSize: '12px' }}>Decided</span>
                           )}
                         </div>
                       </td>

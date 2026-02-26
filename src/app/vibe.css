@@ -1,0 +1,108 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --vibe-bg-1: #c8d8ec;
+  --vibe-bg-2: #a8bfe7;
+  --vibe-ink: #1f2b3d;
+  --vibe-muted: #6f7f96;
+  --vibe-surface: rgba(255, 255, 255, 0.84);
+  --vibe-surface-strong: rgba(255, 255, 255, 0.92);
+  --vibe-border: rgba(172, 186, 208, 0.42);
+  --vibe-primary: #1130e4;
+  --vibe-primary-soft: #2b4efe;
+  --vibe-danger: #d0445f;
+  --vibe-success: #2f8f61;
+  --vibe-warning: #be7b15;
+}
+
+body {
+  color: var(--vibe-ink);
+  background:
+    radial-gradient(1000px 500px at 0% 100%, rgba(88, 119, 246, 0.44), transparent 60%),
+    radial-gradient(860px 480px at 100% 40%, rgba(80, 107, 226, 0.34), transparent 62%),
+    linear-gradient(165deg, var(--vibe-bg-1), var(--vibe-bg-2));
+}
+
+#root {
+  min-height: calc(100vh - 16px);
+}
+
+h1,
+h2,
+h3 {
+  color: #182435;
+  letter-spacing: 0.01em;
+}
+
+p {
+  color: var(--vibe-muted);
+}
+
+a {
+  color: #1a3ef5;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+input,
+select,
+textarea {
+  border: 1px solid var(--vibe-border);
+  border-radius: 10px;
+  background: var(--vibe-surface-strong);
+  color: var(--vibe-ink);
+  box-sizing: border-box;
+  transition: border-color 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+}
+
+input,
+select {
+  min-height: 38px;
+  padding: 8px 12px;
+}
+
+textarea {
+  padding: 10px 12px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: rgba(30, 77, 248, 0.45);
+  box-shadow: 0 0 0 3px rgba(35, 80, 247, 0.14);
+}
+
+button {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  min-height: 36px;
+  padding: 7px 14px;
+  font-weight: 600;
+  color: #f5f8ff;
+  background: linear-gradient(180deg, var(--vibe-primary-soft), var(--vibe-primary));
+  box-shadow: 0 8px 20px -12px rgba(17, 48, 228, 0.9);
+  cursor: pointer;
+}
+
+button:disabled {
+  background: linear-gradient(180deg, #c3cbdd, #b3bdd3);
+  box-shadow: none;
+  color: #eef2f9;
+  cursor: not-allowed;
+}
+
+table {
+  background: var(--vibe-surface);
+  border: 1px solid var(--vibe-border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+th,
+td {
+  border-color: rgba(174, 188, 211, 0.45);
+}
