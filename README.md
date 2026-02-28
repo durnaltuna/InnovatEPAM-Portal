@@ -1,183 +1,73 @@
 # InnovatEPAM Portal
 
-A web-based innovation idea management system that enables employees to submit innovative proposals and allows administrators to review, evaluate, and provide feedback on submitted ideas.
+An innovation idea management system that enables employees to submit proposals and empowers administrators to review, evaluate, and manage the decision workflow.
 
-## Overview
+---
 
-InnovatEPAM Portal is a full-stack MVP (Minimum Viable Product) that implements a complete workflow:
-- **User authentication** with role-based access control (Submitter/Admin roles)
-- **Idea submission** with file attachments (exactly one per idea)
-- **Admin decision management** with multi-stage workflow (Submitted → Under Review → Accepted/Rejected)
-- **Real-time visibility** of admin decisions back to submitters
-- **Comprehensive test coverage** with unit, integration, and E2E tests
+## 🚀 Overview
 
-## Tech Stack
+InnovatEPAM is a web-based portal designed for rapid innovation cycles. The Phase 1 MVP implements a complete end-to-end workflow:
+* **Authentication**: Secure login with role-based access control (Submitter/Admin roles).
+* **Idea Submission**: Form-based submission with a strict "exactly one" file attachment constraint.
+* **Admin Workflow**: State-controlled decision management (Submitted → Under Review → Accepted/Rejected).
+* **Transparency**: Dashboards for submitters to track own ideas, decision history, and admin feedback.
 
-### Frontend
-- **React** 19.2.4 - UI framework
-- **TypeScript** 5.9.3 - Type-safe JavaScript
-- **Vite** 7.3.1 - Build tool with HMR
-- **Tailwind CSS** - Utility-first CSS framework
-- **React Router** 7.13.1 - Client-side routing
+---
 
-### Backend & Data
-- **Supabase** - Managed PostgreSQL, Auth, and File Storage
-- **React Context** - State management
+## 🛠 Tech Stack
 
-### Testing
-- **Vitest** - Unit and integration testing
-- **Playwright** - End-to-end testing
-- **Testing Library** - React component testing
+| Layer | Technology | Rationale |
+| :--- | :--- | :--- |
+| **Frontend** | React 19.2.4 + Vite 7.3.1 | Fast HMR, rapid production builds, and minimal boilerplate. |
+| **Language** | TypeScript 5.9.3 | Strict type safety to reduce runtime bugs and enforce contracts. |
+| **Styling** | Custom CSS + Inline Styles | Simple, localized styling for quick visual iteration. |
+| **Persistence** | Browser `localStorage` | Reliable offline-friendly behavior for MVP/prototyping. |
+| **Testing** | Vitest & Playwright | Comprehensive 3-layer testing strategy. |
 
-### Code Quality
-- **ESLint** - Code linting
-- **TypeScript** - Static type checking
+---
 
-## Prerequisites
+## ✨ Features Completed (Phase 1 MVP)
 
-- Node.js >= 20
-- npm or yarn
-- Supabase account with a project set up
+### User Registration & Access
+* Secure login and registration with role-based access control.
+* Protected routes and session persistence across page reloads.
 
-## Getting Started
+### Idea Management
+* Submitter form with title, description, and category fields.
+* Exactly one file attachment support enforced via service-level validation.
 
-### 1. Install Dependencies
+### Admin Decision Workflow
+* **State Machine**: Ideas must transition from "Submitted" to "Under Review" before a final "Accepted" or "Rejected" status.
+* **Feedback**: Comments are required for final decisions to ensure transparency.
+* **Audit Trail**: Decision history tracking with timestamps and actor information.
 
+### Submitter Visibility
+* Access control ensures submitters can only see their own ideas.
+* Admin comments and decision timestamps are visible in the submitter dashboard.
+
+---
+
+## 🏗 Architectural Patterns
+
+* **Service Layer**: Business logic is isolated in `*Service.ts` files (Auth, Idea, Attachment, Decision) to keep UI concerns separate from persistence.
+* **Access Control Layer**: Query filtering functions (e.g., `isIdeaVisibleToSubmitter`) gate data access at the service level.
+* **Feature-Based Structure**: Organized by domain (e.g., `src/features/auth/`, `src/features/admin/`).
+* **Backend Readiness**: Includes a Supabase client scaffold (`src/services/supabase/client.ts`) for future migration.
+
+---
+
+## 🧪 Quality & Testing
+
+The project maintains a high-quality bar with **63 passing unit/integration tests** and a full E2E suite.
+
+* **Unit Tests (29)**: Business logic, validation rules, and role enforcement.
+* **Integration Tests (34)**: Complete workflows including mocked browser storage and service interactions.
+* **E2E Tests (21)**: Real browser automation via Playwright covering full user journeys.
+
+---
+
+## 🚦 Getting Started
+
+### Installation
 ```bash
 npm install
-```
-
-### 2. Environment Setup
-
-Create a `.env.local` file with your Supabase credentials:
-
-```env
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-### 3. Run Development Server
-
-```bash
-npm run dev
-```
-
-The application will be available at `http://localhost:5173`
-
-## Running Tests
-
-```bash
-# Run all unit and integration tests
-npm test
-
-# Watch mode for development
-npm test:watch
-
-# End-to-end tests (requires running dev server)
-npm run test:e2e
-```
-
-## Building for Production
-
-```bash
-npm run build
-```
-
-This runs type checking, then builds optimized production bundles in the `dist/` directory.
-
-## Project Structure
-
-```
-src/
-├── main.tsx                    # Application entry point
-├── app/
-│   ├── AppShell.tsx           # Main app layout
-│   └── router.tsx             # Route definitions
-├── features/
-│   ├── admin/                 # Admin dashboard features
-│   │   ├── AdminIdeasPage.tsx
-│   │   ├── DecisionModal.tsx
-│   │   └── decisionService.ts
-│   ├── auth/                  # Authentication features
-│   │   ├── LoginPage.tsx
-│   │   ├── RegisterPage.tsx
-│   │   ├── authService.ts
-│   │   └── guards.ts
-│   └── ideas/                 # Idea management features
-│       ├── MyIdeasPage.tsx
-│       ├── IdeaForm.tsx
-│       ├── ideaService.ts
-│       ├── attachmentService.ts
-│       ├── ideaQueries.ts
-│       └── DecisionSummary.tsx
-├── services/
-│   ├── errors.ts              # Error handling utilities
-│   ├── validation.ts          # Form validation logic
-│   └── supabase/
-│       └── client.ts          # Supabase client configuration
-├── types/
-│   └── domain.ts              # TypeScript domain models
-tests/
-├── unit/                      # Unit tests for business logic
-├── integration/               # Integration tests with mocked services
-└── e2e/                       # End-to-end tests with Playwright
-```
-
-## Core Features
-
-### 1. User Registration & Login
-- Secure registration with email and password
-- Role-based access control (Submitter/Admin roles)
-- Session persistence across page reloads
-- Protected routes enforcing authentication
-
-### 2. Idea Submission
-- Submitter form with title, description, and category fields
-- File attachment support (exactly one file per idea)
-- Form validation with user feedback
-- Automatic status initialization as "Submitted"
-
-### 3. Admin Decision Workflow
-- Admin dashboard displaying all submitted ideas
-- Multi-stage status transitions: Submitted → Under Review → Accepted/Rejected
-- Conditional comment requirements (required for final decisions, optional for Under Review)
-- Decision history tracking with timestamps
-
-### 4. Submitter Decision Visibility
-- Submitters view only their own submitted ideas
-- Real-time visibility of admin decisions
-- Comments displayed with decisions
-- Decision timestamps shown for reference
-
-## Documentation
-
-- **Engineering Constitution**: [docs/standards/constitution.md](docs/standards/constitution.md)
-- **Project Specification**: [specs/001-phase1-prd/spec.md](specs/001-phase1-prd/spec.md)
-- **Data Model**: [specs/001-phase1-prd/data-model.md](specs/001-phase1-prd/data-model.md)
-- **Architecture Decision Records**: [docs/adr/](docs/adr/)
-
-## Development Commands
-
-| Command | Purpose |
-|---------|---------|
-| `npm run dev` | Start development server with HMR |
-| `npm run build` | Build for production |
-| `npm run lint` | Run ESLint checks |
-| `npm run typecheck` | Run TypeScript type checking |
-| `npm test` | Run all tests once |
-| `npm run test:watch` | Run tests in watch mode |
-| `npm run test:e2e` | Run Playwright E2E tests |
-
-## Testing Coverage
-
-- **Unit Tests**: 29 tests covering business logic, validation rules, and role enforcement
-- **Integration Tests**: 33 tests covering complete workflows with mocked services
-- **E2E Tests**: 8 tests covering complete user journeys in browser
-
-## Contributing
-
-Please refer to [docs/standards/constitution.md](docs/standards/constitution.md) for contribution guidelines and engineering governance standards.
-
-## License
-
-ISC
