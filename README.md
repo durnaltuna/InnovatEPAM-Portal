@@ -68,6 +68,16 @@ The project maintains a high-quality bar with **63 passing unit/integration test
 
 ## 🚦 Getting Started
 
-### Installation
+### Commands
+
 ```bash
+# Installation
 npm install
+
+# Development & Quality Gates
+npm run dev               # Start Vite dev server
+npm run typecheck         # TypeScript compilation check
+npm run lint              # ESLint code quality check
+npm run test              # Run unit + integration tests
+npm run test:e2e          # Run E2E tests (requires dev server)
+npm run build             # Production build
